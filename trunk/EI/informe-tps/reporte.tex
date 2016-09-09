@@ -17,6 +17,7 @@
 \usepackage{lineno}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%
 % Nuevos comandos  %
@@ -216,41 +217,42 @@ conclusión sobre lo hecho.
 \section{C\'alculo de enlace y modelos de propagaci\'on}
 \label{S:1}
 
+
 El dise\~no de un radioenlace implica toda una serie de c\'alculos que pueden resultar sencillos o complicados, dependiendo de las caract\'eristicas del sistema y del tipo de problema al que nos enfrentemos.
 
 Es por ello que podemos dividir la propagaci\'on de la se\~nal de acuerdo al entorno donde esta viaje: 
 
 \begin{itemize}
-\item Espacios abiertos 
-\item Entornos cerrados
+	\item Espacios abiertos 
+	\item Entornos cerrados
 \end{itemize}
 
 
 \subsection{Distancia m\'axima en espacios abiertos}
 
- La comunicaci\'on "outdoor" en este problema se asume en un entorno de propagaci\'on libre, donde no existen p\'erdidas atmosf\'ericas, de polarizaci\'on y de desadaptaci\'on de impedancias, es decir, operamos en regiones descubiertas. 
- 
-% \begin{figure}[h]
-% 	%\DeclareGraphicsExtensions{.pdf,.png,.jpg,.ppm}
-% 	\centering\includegraphics[width=0.8\linewidth]{Image}
-% 	\caption{Primer zona de Fresnel}
-% \end{figure}
+La comunicaci\'on "outdoor" en este problema se asume en un entorno de propagaci\'on libre, donde no existen p\'erdidas atmosf\'ericas, de polarizaci\'on y de desadaptaci\'on de impedancias, es decir, operamos en regiones descubiertas. 
+
+\begin{figure}[h]
+	%\DeclareGraphicsExtensions{.pdf,.png,.jpg,.ppm}
+	\centering\includegraphics[width=0.8\linewidth]{img/Image.jpg}
+	\caption{Primer zona de Fresnel}
+\end{figure}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{l l l}
-\hline
-\textbf{Modo de funcionamiento} & \textbf{Normal} & \textbf{Boost}\\
-\hline
-Potencia de Tx & +5dBm(3.1mW) & +8dBm(6.3mW) \\
-Sensibilidad de Rx & -100dBm & -102dBm\\
-\hline
-\end{tabular}
-\caption{Technical review Xbee ZB}
+	\centering
+	\begin{tabular}{l l l}
+		\hline
+		\textbf{Modo de funcionamiento} & \textbf{Normal} & \textbf{Boost}\\
+		\hline
+		Potencia de Tx & +5dBm(3.1mW) & +8dBm(6.3mW) \\
+		Sensibilidad de Rx & -100dBm & -102dBm\\
+		\hline
+	\end{tabular}
+	\caption{Technical review Xbee S2C}
 \end{table}
 Para los c\'alculos siguientes se tomar\'an los datos de funcionamiento en modo "Normal".
 
-Partiendo de la ecuaci\'on de Friis
+Partiendo de la ecuaci\'on de Friis\cite{bilb:Friis}
 
 %\begin{equation}
 %\label{Ecuaci\'on de Friis}
@@ -265,42 +267,42 @@ Pr = \frac{Pt Gt Gr \lambda ^{2}}{(4\pi d)^2}
 \end{equation*}
 Siendo Pr (Potencia recibida), Pt(Potencia transmitida), Gt(Ganancia de antena tx), Gr(Ganancia de antena rx), $\lambda$(longitud de onda) y d(distancia radial entre antenas).
 
-Podemos despejar la atenuaci\'on de espacio libre, tambi\'en conocida como p\'erdida de trayectoria.
+Podemos despejar la atenuaci\'on de espacio libre, tambi\'en conocida como p\'erdida de trayectoria\cite{bilb:Free}.
 \begin{equation*}
 \label{Ec:perdida}
-P_{Loss}[dB] = 94.4 + 20 \log_{10}d [Km] + 20 \log_{10}f [GHz] - Gt[dBi] - Gr[dBi]
+P_{Loss}[dB] = 94.4 dB + 20 \log_{10}d [Km] + 20 \log_{10}f [GHz] - Gt[dBi] - Gr[dBi]
 \end{equation*}
-	Y de esta despejar la m\'axima distancia
+Y de esta despejar la m\'axima distancia(adicionamos -5dB de atenuaci\'on, por margen)
 \begin{equation*}
 \label{Ec:distancia}
-d[Km] = 10^{\frac{P_{Loss} + Gt + Gr - 20 \log_{10}f - 92.4}{20}}
+d[Km] = 10^{\frac{P_{Loss} + Gt + Gr - 20 \log_{10}f - 92.4dB -5dB}{20}}
 \end{equation*}
 $P_{Loss}=Gt[dBm] - Gr[dBm] = +5dBm - (-100dBm) = 105dBm$
 $f = 2.4 [GHz]$
 Las ganancias Gr[dBi] y Gr[dBi] se toman como valor cero por ser antenas omnidireccionales.
 \begin{equation*}
 \label{Ec:distancia1}
-d[Km] = 10^{\frac{105 dBm - 20 \log_{10}2.4 - 92.4}{20}} = 1.77 [Km] =1770m
+d[Km] = 10^{\frac{105 dBm - 20 \log_{10}2.4 - 92.4dB-5dB}{20}} = 0.999 [Km] =999m
 \end{equation*}	
-Con la m\'axima distancia $d$ del radioenlace, calculamos la altura $r$ de las antenas. Para ello nos valemos de las f\'ormulas del primer elipsoide de Fresnel, esto es determinando la zona libre de obstaculos.
+Con la m\'axima distancia $d$ del radioenlace, calculamos la altura $r$ de las antenas. Para ello nos valemos de las f\'ormulas del primer elipsoide de Fresnel, esto es determinando la zona libre de obstaculos\cite{bilb:Fresnel}.
 \begin{equation*}
 \label{Ec:fresnel}
-r = F1(m) = 17.32 \sqrt{\frac{(d[Km]/2)^2}{d[Km]f[GHz]}} = 17.32 \sqrt{\frac{(1.77Km/2)^2}{1.77Km2.4GHz}} = 7.43m
+r = F1(m) = 17.32 \sqrt{\frac{(d[Km]/2)^2}{d[Km]f[GHz]}} = 17.32 \sqrt{\frac{(0.99Km/2)^2}{0.99Km2.4GHz}} = 7.28m
 \end{equation*}	
 
-Por lo tanto la altura de las antenas, es decir para establecer una comunicaci\'on punto a punto a distancia m\'axima $d=1.77Km$ entre 2 XBee es de $r=7.43$ en la zona libre de obstaculos.
+Por lo tanto la altura de las antenas, es decir para establecer una comunicaci\'on punto a punto a distancia m\'axima $d=999m$ entre 2 XBee es de $r=7.28m$ en la zona libre de obstaculos.Adem\'as este es un valor muy cercano al valor$d=1200m$ dado por la hoka de datos de la XBee.
 
 \subsection{Distancia m\'axima en entornos cerrados}
 
 La propagaci\'on "indoor" difiere respectos a los sistemas "outdoor". Para asegurar una eficiente comunicaci\'on interior, la ITU a llevado una serie de propuestas para el caso de comunicaciones punto a punto. Debido a que en una comunicaci\'on en entornos cerrados esta muy influenciada por la geometr\'ia del lugar y los objetos en ella. Tanto estos objetos y la construcci\'on de la misma, ocasionan p\'erdidas por reflexiones, dispersi\'on y absorci\'on de las se\~nales RF.  
 
 \begin{figure}[h]
-%\centering\includegraphics[width=0.4\linewidth]{placeholder}
-\caption{Figure caption}
+	\centering\includegraphics[width=0.6\linewidth]{img/xbee-ejemplo.png}
+	\caption{Comunicaci\'on indoor}
 \end{figure}
 
 \subsubsection{C\'alculo Planta alta}
-Para el c\'alculo de m\'axima distancia, como lo indica la figura. Nos valdremos de la f\'ormula de "path loss"
+Para el c\'alculo de m\'axima distancia, como lo indica la figura. Nos valdremos de la f\'ormula de "path loss"\cite{bilb:PathLoss}
 \begin{equation*}
 \label{eq:pathLoss}
 L_{Loss}[dB] = L_{do}[dB] + N \log_{10}d/do + Lf_{n}[dB]
@@ -308,27 +310,25 @@ L_{Loss}[dB] = L_{do}[dB] + N \log_{10}d/do + Lf_{n}[dB]
 Donde $N$(Coef. de p\'erdida), $f$(Frecuencia en Mhz),$d$(Distancia entre base y terminal), $L_{do}$(P\'erdida a do), $L_{f}$(Atenuaci\'on trav\'es del piso), $d0$(distancia de ref=1m) y $n$(nro de pisos entre terminal y base).
 En nuestro caso particular al igual que en el caso anterior, calculamos la m\'axima atenuaci\'on:
 $L_{Loss}= Gt - Gr = +5dBm - (-100dBm) = 105dBm$
-$N=28$ Por dato de tabla (Espacio residencial a 2.4GHz).
+$N=28$ Por dato de tabla \cite{bilb:Tabla}(Espacio residencial a 2.4GHz).
 $L_{do} = 20 \log_{10}f[MHz] - 28 = 39.6dB$
 $Lf_{n} = 0$ Por ser un mismo piso.
-Despejando d
+Despejando d, incluyendo una atenuaci\'on adicional de 10dB por la cantidad de objetos que puedan influir en la comunicaci\'on.
 \begin{equation*}
 \label{eq:calculod}
-d[m] = 10 ^{\frac{L_{Loss}[dB] - L_{do}[dB] - L_{f}[dB]}{N}} 
-d[m] = 10 ^{\frac{105dBm - 39.6dB - 0}{28}} = 216.62m
+d[m] = 10 ^{\frac{L_{Loss}[dB] - L_{do}[dB] - L_{f}-10dB[dB]}{N}} 
+d[m] = 10 ^{\frac{105dBm - 39.6dB - 0dB - 10dB}{28}} = 95.18m
 \end{equation*}
-Entonces en un piso la distancia m\'axima de transmisi\'on es $d=216.62m$
+Entonces en un piso la distancia m\'axima de transmisi\'on es $d=95.18m$
 
 \subsubsection{C\'alculo de comunicaci\'on entre Planta alta y baja}
-En este caso la m\'axima distancia $d$, ser\'a influenciada por la atenuaci\'on del piso, como separaci''on de los dos ambientes. Por lo tanto $L_{f}[dB]=5$ dado por el cuadro. La distancia m\'axima ser\'a.
+En este caso la m\'axima distancia $d$, ser\'a influenciada por la atenuaci\'on del piso, como separaci''on de los dos ambientes. Por lo tanto $L_{f}[dB]=5$ dado por el cuadro, adicionamos una atenuaci\'on de 10dB . La distancia m\'axima ser\'a.
 \begin{equation*}
 \label{eq:calculod}
 d[m] = 10 ^{\frac{L_{Loss}[dB] - L_{do}[dB] - L_{f}[dB]}{N}} 
-d[m] = 10 ^{\frac{105dBm - 39.6dB - 5}{28}} = 143.59m
+d[m] = 10 ^{\frac{105dBm - 39.6dB - 5dB -10dB}{28}} = 63.09m
 \end{equation*}
-Se puede notar aqu\'i, que el valor de $d$ distancia m\'axima es
-reducido por esta atenuaci\'on. Siendo el valor de $d=143.59m$ para
-comunicaciones entre dos pisos.
+Se puede notar aqu\'i, que el valor de $d$ distancia m\'axima es reducido por esta atenuaci\'on. Siendo el valor de $d=63.09m$ para comunicaciones entre dos pisos. Lo que es comparable al $d=60m$ dado por la hoja de datos.
 
 \section{Ejercitación en modo AT}
 \label{sec:AT}
@@ -569,6 +569,317 @@ hasta la \textbf{12} ya fueron descritos. Como respuesta al comando
 \end{minipage}
 \section{Ejercitación en modo API}
 \label{sec:API}
+\subsection{Introducción al modo API}
+En modo API el nivel de programación es mayor, pero provee de mayor "flexibilidad" al momento de realizar el envío y recepción de datos.
+A diferencia del modo transparente, en este modo el módulo XBee espera por una secuencia específica de bytes que le indican que tipo de operación deberia de realizar. Cada uno de estas secuencias se le conoce como "frame" o también paquetes. Y dependiendo del contenido de cada paquete se llamará a una función u otra de la API.
+De igual manera, el módulo XBee responde con secuencias específicas dependiendo si lo que está reportando es un cambio en el estado del módem, o el estado de la transmisión si este esta recibiendo un paquete de datos desde un nodo remoto.
+
+Cada paquete presenta la siguiente estructura:
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN05.jpg}
+\end{figure}
+Donde cada parte corresponde a:
+\begin{enumerate}[1.]
+	\item Byte 1: El encabezado que siempre tiene un valor de 0x7E, esto indica al módulo que está por comenzar la transmisión de un paquete.
+	\item Bytes 2, 3: Esta sección indica el tamaño del paquete, el tamaño se calcula contando los bits entre el byte menos significativo del tamaño y el byte de la suma de verificación (checksum).
+	\item Bytes 4-n: Esta sección contiene la estructura específica a la API, de los contenidos de esta parte del paquete dependerá la función de la API que se llame.
+	\item Byte n+1: La suma de verificación de todos los bytes contenidos en el paquete. Esto se utiliza para verificar la "integridad" de los datos recibidos, si la suma no coincide el paquete es descartado.
+\end{enumerate}
+
+El contenido del paquete de datos varía  en base al comando que se quiera transmitir, por ejemplo si quisiéramos transmitir un dato a otro XBee utilizando una dirección de 16 bits deberíamos utilizar la siguiente estructura:
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN06.jpg}
+\end{figure}
+
+Configuración Frame ID a '0' desactivará trama de respuesta.
+Donde la estructura tiene la siguiente forma:
+\begin{enumerate}
+	\item Byte 4:Identificador de la API, este código identifica el tipo de comando que queremos ejecutar, para este caso el código 0x01 corresponde a "Transmit Request: 16-Bit Address" o solicitud de transmisión a una dirección de 16 bits.
+	\item Byte 5:Corresponde a un número secuencial del paquete. Para cada envío se recibe un "acuse de recibo" (ACK) este número nos servirá luego para verificar que un paquete que enviamos fue recibido por el destinatario.
+	\item Bytes 6, 7:Corresponden a la dirección del XBee destinatario, se coloca primero el byte más significativo y luego el menos significativo.
+	\item Byte 8:Corresponde a las opciones de envío, si establecemos el bit 0x01 en 1 no se esperará un ACK, mientras que si habilitamos el bit 0x04 se enviará el mensaje con broadcast para todas las redes de área personal (PAN).
+	\item Byte 9-n:Datos a enviar (máximo 100 bytes).
+\end{enumerate}
+\subsection{El modo API 1 y API 2}
+Según la documentación del XBee existen dos modos API, la diferencia entre el modo 1 y el modo 2 es que en el Modo 2 las secuencias de bytes van "escapadas".
+
+¿Qué significa esto? Resulta que el módulo XBee intentará leer el inicio de un paquete siempre encuentre el byte 0x7E, ¿pero qué pasa si este valor se está enviando en algún lugar dentro del paquete? Por ejemplo en el tamaño, o en la misma secuencia de datos.
+
+Pues lo que ocurrirá será que el XBee va a descartar el paquete que estaba procesando y comenzará a procesar el nuevo de manera errónea. Para solventar este problema se incluyó el Modo API 2, en este modo antes de enviar un dato verificamos si el byte posee cualquiera de los siguientes valores:
+\begin{itemize}
+	\item 0x7E: Inicio del paquete.
+	\item 0x7D: Carácter de escape.
+	\item 0x11: Señalizador XON.
+	\item 0x13: Señalizador XOFF.	
+\end{itemize}
+Para escapar la secuencia tenemos que enviar el carácter de escape más el dato que queremos enviar haciendo una operación XOR con el valor 0x20.
+Por ejemplo, la secuencia del siguiente paquete:
+
+0x7E 0x00 0x02 0x23 0x11 0xCB
+
+Quedaría escapado de la siguiente manera:
+
+0x7E 0x00 0x02 0x23 0x7D 0x31 0xCB
+
+\subsection{Modo API}
+Para habilitar el modo API debemos enviar la siguiente secuencia de comandos a nuestra XBee:
+\subsubsection{Modo API 1:}
+\begin{itemize}
+	\item Enviamos "+++" y esperamos confirmaci\'on "OK".
+	\item Enviamos "ATAP1" y esperamos confirmaci\'on "OK"
+	\item Enviamos "ATCN" y esperamos confirmaci\'on "OK"
+\end{itemize}
+\subsubsection{Modo API 2:}
+\begin{itemize}
+	\item Enviamos "+++" y esperamos confirmaci\'on "OK".
+	\item Enviamos "ATAP2" y esperamos confirmaci\'on "OK"
+	\item Enviamos "ATCN" y esperamos confirmaci\'on "OK"
+\end{itemize}
+Una vez el XBee se encuentre en modo API, ignorará todos los datos que no muestren la secuencia correspondiente a una estructura de la API. Esto resulta muy útil ya que podemos imprimir sobre la misma línea Serie donde está conectado el XBee mensajes para "depurar" el funcionamiento y el XBee simplemente los ignorará.
+
+Tomen en consideración que los datos recibidos del XBee también presentarán la estructura de la API así que leer los datos requerirá realizar el proceso detallado anteriormente pero a la inversa.
+
+\subsubsection{Ejemplo de mensaje}
+Si quisiéramos enviar el texto "Hello World!" en un broadcast, deberíamos enviar la siguiente secuencia de bytes al XBee:
+\begin{lstlisting}[emph={0x7E:,0x00:,0x11:,0x01:,0xFF:,0xFF:,0x00:,
+0x48:,0x65:,0x6C:,0x6C:,0x6F:,0x20:,0x57:,0x6F:,0x72:,0x6C:,0x64:,0x21:,
+0xC3}, emphstyle={\color{blue}}, label=code:apiEjempl-id]
+0x7E: Encabezado
+0x00:
+0x11: Tama\~no en Bytes del paquete (17)
+0x01: Identificación del comando de la API (0x01 para enviar a dirección de 16 bits)
+0x01: Identificación del paquete (cualquier número entre 0x01 y 0xFF)
+0xFF: Byte más significativo dirección destino
+0xFF: Byte menos significativo dirección destino
+0x00: Opciones, "0" utiliza opciones por defecto.
+0x48: 'H'
+0x65: 'e'
+0x6C: 'l'
+0x6C: 'l'
+0x6F: 'o'
+0x20: ' '
+0x57: 'W'
+0x6F: 'o'
+0x72: 'r'
+0x6C: 'l'
+0x64: 'd'
+0x21: '!'
+0xC3: Suma de verificación
+\end{lstlisting}  
+\subsubsection{La suma de verificación}
+El último byte, la suma de verificación,  se utiliza para garantizar que el paquete se haya transmitido de manera íntegra, lo calculamos restando a 0xFF la suma truncada a 8 bits de  todos los bytes entre el tamaño del paquete y el checksum, para el ejemplo anterior la fórmula del checksum sería:
+
+
+0xFF- 0xFF \&(0x01+ 0xFF + 0xFF + 0x00 +0x48 +
+0x65 + 0x6C + 0x6C +0x6F + 0x20 +
+0x57 + 0x6F +0x72 +0x6C + 0x64 +0x21) = 0xC3
+
+
+Utilizando el software XCTU y comandos AT en modo API, configurar dos entradas como canales de conversión AD. Utilizar el comando ATIS para leer las entradas. Describir el significado de la información devuelta por el modulo luego del envió de este comando.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN07.jpg}
+\end{figure}
+Al igual que en el modo AT, las configuraciones de los puertos son similares, con la salvedad de que debemos enviar el comando AT dentro de una trama API especialmente diseñada para enviar comandos AT.
+
+El software XCTU cuenta con, entre otras herramientas, con un frame generator y un frame interpreter especialmente diseñados para poder crear e interpretar tramas API.
+
+Estas dos utilidades se muestran a continuación
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN08.jpg}
+	\caption{Ubicaci\'on del frame generador e interprete dentro de XCTU}
+\end{figure}
+A continuación veremos cómo utilizar el frame generator:
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN09.jpg}
+	\caption{"Frame generator" de XCTU}
+\end{figure}
+Dentro del marco de generaci\'on, podemos encontrar varias opciones:
+\begin{itemize}
+	\item Tipo de protocolo: 802.15. Wi-Fi, XTend(digimesh), Xted(Legacy), ZigBee, DigiMesh, Point to multipoint, ZNet 2.5,Smart Energy, XLR.
+	\item Modo: API1-Modo API no escapado, API2-Modo API escapado.
+	\item Tipo de frame: Dependiendo de lo que vayamos a transmitir, 2 bytes con opciones desde 0x00h a 0xFFh.
+	\end{itemize}
+	Además, tenemos una lista de todos los bytes que componen la trama API, explicando cada uno de ellos, como la sig.
+\begin{figure}[ht]
+		\centering
+		\includegraphics[width=.6\textwidth]{img/IMAGEN10.jpg}
+		\caption{Trama API dentro del marco generador.}
+\end{figure}
+Al colocar todos los parámetros pertinentes para crear la trama API, así como el payload que vamos a enviar, ya sea este un comando AT o caracteres ASCII, podremos ver el frame generado en la parte inferior del frame generator y podremos copiarlo al portapapeles con el botón “copy frame”
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN11.jpg}
+	\caption{Frame generado con el Frame Generator.}
+\end{figure}
+Este frame que copiamos, es el que vamos a utilizar en la consola para poder enviar informacion.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN12.jpg}
+	\caption{Consola de comandos API.}
+\end{figure}
+Acto seguido presionamos el botón “+” verde y veremos la siguiente pantalla.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN13.jpg}
+	\caption{Agregando una nueva trama API a la lista de comandos}
+\end{figure}
+Dentro de esta pantalla podemos ver que tenemos acceso al Frame generator, con lo cual como antes vimos, crearemos nuestra trama API, en este caso creamos la trama API de comandos AT, para enviar el comando “ATD00”, que nos sirve para deshabilitar el puerto D0 por ejemplo.
+
+Enviamos el frame con el botón verde “Send selected frame”.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN14.jpg}
+	\caption{Envió del frame generado para deshabilitar el puerto D0}
+\end{figure}
+
+En la parte derecha de la consola podremos ver los detalles de cada frame como “AT Command” o “AT Command response” donde sabremos si el comando tuvo efecto sobre el puerto en cuestión.
+
+Podemos copiar esa respuesta en el portapapeles con el botón “copy packet information” y lo vemos como sigue:
+\begin{lstlisting}[emph={AT, Command, Response, (API 1),Start, delimiter:,Length:,Frame, type:,Frame, ID:,AT, Command:,Status:,Checksum: }, emphstyle={\color{green}}, label=code:apiEjempl-id]
+AT Command Response (API 1)
+7E 00 05 88 01 44 30 00 02
+Start delimiter:
+7E
+Length:
+00 05 (5)
+Frame type:
+88 (ATCommandResponse)
+Frame ID:
+01 (1)
+AT Command:
+44 30 (D0)
+Status:
+00 (Status OK)
+Checksum:
+02
+\end{lstlisting}  
+En el ejemplo anterior vimos como desactivar una entrada del GPIO, ahora como se solicitó en el práctico mostraremos la secuencia para configurar dos entradas como canales de conversión AD. Y luego leeremos la información con el comando ATIS.
+Vamos a generar una lista de tramas para enviar desde la consola API del XCTU y de ese modo poder configurar los puertos como se pidió.
+Los comandos que vamos a enviar en tramas API serán los siguientes:
+\begin{lstlisting}[emph={ATD02:, Trama API:,ATD12:,ATWR:,ATAC:,}, emphstyle={\color{green}}, label=code:apiEjempl-id]
+ATD02: Configuramos la entrada D0 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 30 02 80
+ATD12: Configuramos la entrada D1 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 31 02 7F
+ATWR: Guardamos los cambios en la memoria.
+Trama API: 7E 00 04 08 01 57 52 4D
+ATAC: Aplica los cambios al módulo.
+Trama API: 7E 00 04 08 01 41 43 72
+\end{lstlisting}  
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN15.jpg}
+	\caption{Entradas del GPIO antes de aplicar las tramas API.}
+\end{figure}
+En la esquina inferior derecha veremos un botón verde “Start sequence”, este botón envía los 4 frames directamente y guarda los cambios ocupando los comandos anteriormente mencionados
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN16.jpg}
+	\caption{Envió de la secuencia de tramas para configurar el GPIO.}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN17.jpg}
+	\caption{Estado del GPIO luego de la configuración.}
+\end{figure}
+
+Ahora vamos a configurar dos entradas digitales.
+Los comandos que vamos a enviar en tramas API serán los siguientes:
+\begin{lstlisting}[emph={ATD03:,Trama API:,ATD13:,ATWR:,ATAC:}, emphstyle={\color{green}}, label=code:apiEjempl-id]
+ATD03: Configuramos la entrada D0 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 30 03 7F
+ATD13: Configuramos la entrada D1 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 31 03 7E
+ATWR: Guardamos los cambios en la memoria.
+Trama API: 7E 00 04 08 01 57 52 4D
+ATAC: Aplica los cambios al módulo.
+Trama API: 7E 00 04 08 01 41 43 72
+\end{lstlisting} 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN18.jpg}
+	\caption{Envió de la secuencia de tramas para configurar el GPIO.}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN19.jpg}
+	\caption{Estado del GPIO luego de la configuración.}
+\end{figure}
+Ahora vamos a configurar dos salidas digitales.
+Los comandos que vamos a enviar en tramas API serán los siguientes:
+\begin{lstlisting}[emph={ATD04: ,Trama API:,ATD14:,ATWR:,ATAC:}, emphstyle={\color{green}}, label=code:apiEjempl-id]
+ATD04: Configuramos la entrada D0 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 30 04 7E
+ATD14: Configuramos la entrada D1 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 31 04 7D
+ATWR: Guardamos los cambios en la memoria.
+Trama API: 7E 00 04 08 01 57 52 4D
+ATAC: Aplica los cambios al módulo.
+Trama API: 7E 00 04 08 01 41 43 72
+\end{lstlisting} 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN20.jpg}
+	\caption{Envió de la secuencia de tramas para configurar el GPIO.}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN21.jpg}
+	\caption{Estado del GPIO luego de la configuración.}
+\end{figure}
+Empleo del comando ATIS.
+
+Para probar este comando vamos a configurar las dos primeras entradas analógicas y las dos siguientes digitales.
+Los comandos que vamos a enviar en tramas API serán los siguientes:
+\begin{lstlisting}[emph={ATD02: ,Trama API:,ATD12:,ATD23:,ATD33:,ATWR:,ATAC:,ATIS:}, emphstyle={\color{green}}, label=code:apiEjempl-id]
+ATD02: Configuramos la entrada D0 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 30 32 50
+ATD12: Configuramos la entrada D1 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 31 32 4F
+ATD23: Configuramos la entrada D1 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 32 33 4D
+ATD33: Configuramos la entrada D1 como puerto analógico.
+Trama API: 7E 00 05 08 01 44 33 33 4C
+ATWR: Guardamos los cambios en la memoria.
+Trama API: 7E 00 04 08 01 57 52 4D
+ATAC: Aplica los cambios al módulo.
+Trama API: 7E 00 04 08 01 41 43 72
+ATIS: se utiliza para forzar una lectura de todas las líneas ADC/DIO habilitadas
+Trama API: 7E 00 04 08 12 49 53 49
+\end{lstlisting} 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{img/IMAGEN22.jpg}
+	\caption{Estado del GPIO luego de la configuración.}
+\end{figure}
+Luego del envió de la secuencia de tramas para configurar el GPIO enviamos la trama con el comando ATIS y la misma nos devuelve lo siguiente:
+\begin{lstlisting}[emph={RX,(,Receive,),Packet,16,-,bit,Address,IO,(API, 1),Start,delimiter:,Length:,Frame, type:,16-bit, source, address:, RSSI:,Options:,Number, of, samples:,Digital, channel, mask:,Analog ,channel mask: ,DIO2/AD2, digital, value: ,DIO3/AD3, DIO0/AD0, analog}, emphstyle={\color{black}}, label=code:apiEjempl-id]
+RX (Receive) Packet 16-bit Address IO (API 1)
+7E 00 0E 83 00 00 00 00 01 06 0C 00 0C 03 FF 03 FF 59
+Start delimiter:        7E
+Length:                 00 0E (14)
+Frame type:             83 (RX(Receive)Packet16-bitAddressIO)
+16-bit source address:  00 00
+RSSI:                   00
+Options:                00
+Number of samples:      01
+Digital channel mask:   00 0C
+Analog channel mask:    06 00
+DIO2/AD2 digital value: High
+DIO3/AD3 digital value: High
+DIO0/AD0 analog value:  03 FF (1023)
+DIO1/AD1 analog value:  03 FF (1023)
+Checksum:               59
+\end{lstlisting} 
+El último Frame enviado, nos devuelve una respuesta que es el estado de las líneas activas, en este caso el estado de las dos entradas analógicas en 03FF (1023) y las dos entradas digitales en High.
 \newpage{}
 
 \section{Enlaces entre módulos XBee}
@@ -805,11 +1116,39 @@ para mejorar el código utilizado (freeOSEK).
   \emph{XBoard [-W]}.
   \burl{http://www.cika.com/soporte/Information/Digi-RF/XBee/XBoard_doc.pdf}.
 
-\bibitem{at-cmds}
-  Digi International,
-  \emph{Knowledge Base -- The AT Command Set}.
-  \burl{http://knowledge.digi.com/articles/Knowledge_Base_Article/The-AT-Command-Set}.
+  
+\bibitem{bilb:Friis} Andreas F. Molisch.
+Wireless Communications.page 48.
+John Wiley \& Sons. 2011.
 
+\bibitem{bilb:Free} Andrea Goldsmith.
+Wireless Communications.page 32.
+Cambridge University Press. 2005.
+
+\bibitem{bilb:Fresnel} Andrea Goldsmith.
+Wireless Communications.page 40.
+Cambridge University Press. 2005.
+
+\bibitem{bilb:PathLoss} Recommendation ITU-R P.1238-8.
+"Propagation data and prediction methods
+for the planning of indoor
+radiocommunication systems and
+radio local area networks in the
+frequency range 300 MHz to 100 GHz".page 4.
+P Series Radiowave propagation. 2015.
+
+\bibitem{bilb:Tabla} Recommendation ITU-R P.1238-8.
+"Propagation data and prediction methods
+for the planning of indoor
+radiocommunication systems and
+radio local area networks in the
+frequency range 300 MHz to 100 GHz".page 4 to 5.
+P Series Radiowave propagation. 2015.
+
+\bibitem{at-cmds}
+Digi International,
+\emph{Knowledge Base -- The AT Command Set}.
+\burl{http://knowledge.digi.com/articles/Knowledge_Base_Article/The-AT-Command-Set}.
 \end{thebibliography}
 
 % \appendix{}
